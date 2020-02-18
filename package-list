@@ -1,0 +1,8 @@
+de.gematik.ti.healthcard.control.common
+de.gematik.ti.healthcard.control.common.event
+de.gematik.ti.healthcard.control.common.event.absent
+de.gematik.ti.healthcard.control.common.event.present
+de.gematik.ti.healthcard.control.common.exceptions
+de.gematik.ti.healthcard.control.common.integration.card
+de.gematik.ti.healthcard.control.common.pace
+de.gematik.ti.healthcard.control.common.verifyPin
