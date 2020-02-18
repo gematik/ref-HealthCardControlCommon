@@ -1,0 +1,74 @@
+@startuml
+
+  package de.gematik.ti.healthcard.control.common {
+    class CardDetector {
+        {static} - LOG : Logger
+        {static} - TAG : String
+        {static} - RECEIVE_BUFFER_SIZE : int
+        - healthCardMap : Map<ICardReader, IHealthCard>
+        {static} - instance : CardDetector
+        - CardDetector()
+        {static} + getInstance()
+        {static} + startDetection()
+        {static} + stopDetection()
+        + register()
+        + unregister()
+        + handleCardPresentEvents()
+        - createHealthCardWithTypeAndSendEvent()
+        - extractCardType()
+        - sendEvent()
+        - createPresentEventForHealthCardType()
+        - getHealthCardTypeSmcb()
+        - getHealthCardTypeHba()
+        - getHealthCardTypeForEgk()
+        + handleCardAbsentEvents()
+        - sendCardAbsentEvent()
+        + handleCardReaderDisconnectedEvents()
+        - createAbsentEventForHealthCardType()
+    }
+  }
+  
+
+  package de.gematik.ti.healthcard.control.common {
+    enum CARD_TYPE {
+      EGK
+      HBA
+      SMCB
+      UNKNOWN
+    }
+  }
+  
+
+  package de.gematik.ti.healthcard.control.common {
+    class CardGenerationExtractor {
+        + getCardGeneration()
+        + getCardGeneration()
+        - convertToInt()
+        - check()
+    }
+  }
+
+  package de.gematik.ti.healthcard.control.common {
+        enum CardGeneration {
+          G1
+          G1P
+          G2
+          G2_1
+          UNKNOWN
+        }
+        class WrongObjectSystemVersionArraySizeException {
+           {static} + MESSAGE : String
+            + WrongObjectSystemVersionArraySizeException()
+
+        }
+    }
+
+
+
+  CardDetector +-down- CARD_TYPE
+  CardDetector o-- CardGenerationExtractor
+  CardGenerationExtractor ..> WrongObjectSystemVersionArraySizeException
+  CardGenerationExtractor ..> CardGeneration
+
+
+@enduml

@@ -1,0 +1,7 @@
+include::config.adoc[]
+
+== HealthCardCommon
+
+include::HCCCOM_Introduction.adoc[]
+include::HCCCOM_Overview.adoc[]
+include::HCCCOM_GettingStarted.adoc[]

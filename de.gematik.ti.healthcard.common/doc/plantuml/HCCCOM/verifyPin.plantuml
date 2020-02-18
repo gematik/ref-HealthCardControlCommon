@@ -1,0 +1,111 @@
+@startuml
+
+
+  namespace de.gematik.ti.healthcard.control.common.verifyPin {
+      class de.gematik.ti.healthcard.control.common.verifyPin.CallbackHandlePin {
+          {static} - LOG : Logger
+          - card : IHealthCard
+          - pinResultResultOperation : ResultOperation<PinResult>
+          - queue : ArrayBlockingQueue<ResultOperation<PinResult>>
+          + CallbackHandlePin()
+          + abortRequest()
+          + call()
+          + handlePinNumber()
+      }
+
+      class de.gematik.ti.healthcard.control.common.verifyPin.PinConfiguration {
+                - appIds : String[]
+                - pwid : int
+                + PinConfiguration()
+                + getAppIds()
+                + getPwid()
+      }
+
+      class de.gematik.ti.healthcard.control.common.verifyPin.PinContainer {
+                {static} - EMPTY_APPIDS : String[]
+                {static} - LOG : Logger
+                {static} - PINCONTAINER_EGK2 : Map<String, PinConfiguration>
+                {static} - PINCONTAINER_EGK21 : Map<String, PinConfiguration>
+                {static} - PINCONTAINER_HBA2 : Map<String, PinConfiguration>
+                {static} - PINCONTAINER_HBA21 : Map<String, PinConfiguration>
+                {static} - PINCONTAINER_SMCB2 : Map<String, PinConfiguration>
+                {static} - PINCONTAINER_SMCB21 : Map<String, PinConfiguration>
+                {static} + getPinConfiguration()
+                {static} - getContainer()
+                {static} - getValidPinTypes()
+      }
+
+      class de.gematik.ti.healthcard.control.common.verifyPin.PinResult {
+                {static} - LOG : Logger
+                - numberRemain : int
+                - pinVerifiSuccess : boolean
+                - verifyResultText : String
+                + PinResult()
+                + getNumberRemain()
+                + getVerifyResultText()
+                + isPinVerifiSuccess()
+                + setNumberRemain()
+                + setPinVerifiSuccess()
+      }
+
+      enum PinState {
+              NO_ERROR
+              PASSWORD_DISABLED
+              PASSWORD_NOT_FOUND
+              RETRY_COUNTER_COUNT_00
+              RETRY_COUNTER_COUNT_01
+              RETRY_COUNTER_COUNT_02
+              RETRY_COUNTER_COUNT_03
+              SECURITY_STATUS_NOT_SATISFIED
+              TRANSPORT_STATUS_EMPTY_PIN
+              TRANSPORT_STATUS_TRANSPORT_PIN
+      }
+
+      class de.gematik.ti.healthcard.control.common.verifyPin.PinVerfiyLauncher {
+                {static} - LOG : Logger
+                {static} - TIMEOUT_SECONDS : long
+                - card : IHealthCard
+                - completableFuture : CompletableFuture<ResultOperation<PinResult>>
+                + PinVerfiyLauncher()
+                + subscribeCancleEvent()
+                + verifyPin()
+      }
+
+      class de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier {
+                {static} - LOG : Logger
+                - cardHc : IHealthCard
+                + PinVerifier()
+                {static} + stringToIntarray()
+                + verifyPin()
+                - flapMapSelections()
+                - getSelectRootResult()
+                - hookAbsentEvent()
+                - validatePinResult()
+                - verifyPin()
+      }
+
+      enum VerifyState {
+              verifyRequired
+              verifyValid
+      }
+
+      enum PinVerifyError {
+              accessErr
+              blocking
+              interruption
+              timeout
+              errorIndex
+              errorMsg
+      }
+
+  }
+
+  de.gematik.ti.healthcard.control.common.verifyPin.CallbackHandlePin .up.|> IPinNumberResponseListener
+  de.gematik.ti.healthcard.control.common.verifyPin.CallbackHandlePin .up.|> java.util.concurrent.Callable
+  de.gematik.ti.healthcard.control.common.verifyPin.CallbackHandlePin ..> de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier
+
+  de.gematik.ti.healthcard.control.common.verifyPin.PinResult +-down- de.gematik.ti.healthcard.control.common.verifyPin.PinResult.PinState
+  de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier o-- de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier.VerifyState : verifyState
+  de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier +-down- de.gematik.ti.healthcard.control.common.verifyPin.PinVerifier.VerifyState
+
+@enduml

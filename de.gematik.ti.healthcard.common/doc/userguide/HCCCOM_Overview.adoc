@@ -1,0 +1,141 @@
+include::config.adoc[]
+
+== Overview
+
+This library contains the `CardDetector`, the `TrustedChannelPaceKeyRequestHandler`, and the `PinVerifier`.
+
+The CardDetector automatically determines the current card type and the current card generation and provides information about card events.
+
+For each PaceKeyRequest event starts the TrustedChannelPaceKeyRequestHandler thread in this instance in order to request the CardAccessNumber via an event bus request from the user interface or another application.
+After the CardAccessNumber response, the PaceKey negotiation is started, and after the successful negotiation, the requester is informed of the Pacekey.
+
+The Events send over EventBus are stored in package `de.gematik.ti.healthcard.control.events` and subpackages.
+
+ifndef::useCachePlantuml[]
+
+.Overview of health card control common
+[plantuml,HCCCOM/generated/overview,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/overview.plantuml[]
+----
+
+endif::useCachePlantuml[]
+ifdef::useCachePlantuml[]
+
+.Overview of health card control common
+image::HCCCOM/generated/overview.png[caption="{classdia-caption} {counter:class}: "]
+
+{empty} +
+
+endif::useCachePlantuml[]
+
+=== CardDetector
+
+==== Purpose
+// tag::CardDetector[]
+The singleton Card Detector subscribe to EventBus for Card- and CardReader-Events.
+For each CardPresent-Event determine this class automatically the Card Type (e.g. EGK, HBA or SMCB) and the Card Generation (e.g. G2, G2.1).
+With this information would the `HealtCard` object initialized and the EventBus subscriber informed with HealthCardPresentEvents for the specific type.
+Furthermore the CardDetector send an event for each absent card or disconnected card reader with containing health card.
+
+ifndef::useCachePlantuml[]
+
+.CardDetector
+[plantuml,HCCCOM/generated/CardDetector,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/CardDetector.plantuml[]
+----
+
+endif::useCachePlantuml[]
+ifdef::useCachePlantuml[]
+
+.CardDetector
+image::HCCCOM/generated/CardDetector.png[caption="{classdia-caption} {counter:class}: "]
+
+{empty} +
+
+endif::useCachePlantuml[]
+// end::CardDetector[]
+=== HealthCardPresentEvents
+
+The control layer send specific events for each present health card or if the type is unknown an UnknownCardPresentEvent.
+The subscriber could subscribe for specific HealthCardPresentEvent e.g. Egk21HealthCardPresentEvent or for generally events like AbstractEgkHealthCardPresentEvent for all EGK present events.
+
+ifndef::useCachePlantuml[]
+
+.HealthCardPresentEvents
+[plantuml,HCCCOM/generated/presentEvents,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/presentEvents.plantuml[]
+----
+
+endif::useCachePlantuml[]
+ifdef::useCachePlantuml[]
+
+.HealthCardPresentEvents
+image::HCCCOM/generated/presentEvents.png[caption="{classdia-caption} {counter:class}: "]
+
+{empty} +
+
+endif::useCachePlantuml[]
+
+=== HealthCardAbsentEvents
+
+The control layer send specific events for each absent health card or for disconnected card reader with containing health card.
+The subscriber could subscribe for specific HealthCardAbsentEvent e.g. Egk21HealthCardAbsentEvent or for generally events like AbstractEgkHealthCardAbsentEvent for all EGK absent events.
+
+.HealthCardAbsentEvents
+[plantuml,HCCCOM/generated/absentEvents,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/absentEvents.plantuml[]
+----
+
+=== TrustedChannelPaceKeyRequestHandler
+// tag::TrustedChannelPaceKeyRequestHandler[]
+The singleton TrustedChannelPaceKeyRequestHandler subscribe to EventBus for PaceKey-Request-Events.
+For each PaceKeyRequest-Event start this instance a thread to request the CardAccessNumber over Event-Bus request from UI or other application.
+After CardAccessNumber response starts the PaceKey negotiation and after success negotiation would the requester informed about the pacekey.
+
+ifndef::useCachePlantuml[]
+
+.TrustedChannelPaceKeyRequestHandler
+[plantuml,HCCCOM/generated/TrustedChannelPaceKeyRequestHandler,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/pace.plantuml[]
+----
+
+endif::useCachePlantuml[]
+ifdef::useCachePlantuml[]
+
+.TrustedChannelPaceKeyRequestHandler
+image::HCCCOM/generated/TrustedChannelPaceKeyRequestHandler.png[caption="{classdia-caption} {counter:class}: "]
+
+{empty} +
+
+endif::useCachePlantuml[]
+// end::TrustedChannelPaceKeyRequestHandler[]
+
+=== CallBackHandlePin
+
+If PIN entries are necessary for the card, these are controlled by the class CallBackHandlePin.
+The process prompts for the PIN reference - regardless of whether the PIN was previously successfully entered and checked.
+The card reader transmits the PIN to the selected card for verification.
+The test result provides information about the success or failure of the PIN check and, if applicable, the number of remaining PIN attempts.
+
+ifndef::useCachePlantuml[]
+
+.CallBackHandlePin
+[plantuml,HCCCOM/generated/verifyPin,png,caption="{classdia-caption} {counter:class}: ",650]
+----
+include::{plantumldir}/HCCCOM/verifyPin.plantuml[]
+----
+
+endif::useCachePlantuml[]
+ifdef::useCachePlantuml[]
+
+.CallBackHandlePin
+image::HCCCOM/generated/verifyPin.png[caption="{classdia-caption} {counter:class}: "]
+
+{empty} +
+
+endif::useCachePlantuml[]

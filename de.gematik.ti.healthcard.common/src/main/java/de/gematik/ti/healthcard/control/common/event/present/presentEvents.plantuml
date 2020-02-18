@@ -1,0 +1,126 @@
+@startuml
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        abstract class AbstractEgkHealthCardPresentEvent {
+            # AbstractEgkHealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        abstract class AbstractHbaHealthCardPresentEvent {
+            # AbstractHbaHealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        abstract class AbstractHealthCardPresentEvent {
+            # AbstractHealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        abstract class AbstractSmcbHealthCardPresentEvent {
+            # AbstractSmcbHealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Egk21HealthCardPresentEvent {
+            + Egk21HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Egk2HealthCardPresentEvent {
+            + Egk2HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Hba21HealthCardPresentEvent {
+            + Hba21HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Hba2HealthCardPresentEvent {
+            + Hba2HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Smcb21HealthCardPresentEvent {
+            + Smcb21HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class Smcb2HealthCardPresentEvent {
+            + Smcb2HealthCardPresentEvent()
+        }
+      }
+    }
+
+
+    package de.gematik.ti.healthcard.control.common.event {
+      package de.gematik.ti.healthcard.control.common.event.present {
+        class UnknownCardPresentEvent {
+            + UnknownCardPresentEvent()
+        }
+      }
+    }
+
+      package de.gematik.ti.healthcard.control.common.event {
+        abstract class AbstractHealthCardEvent {
+            # AbstractHealthCardEvent()
+            + getHealthCard()
+        }
+      }
+
+  package de.gematik.ti.cardreader.provider.api.events {
+      abstract class AbstractCardReaderEvent {
+      }
+    }
+  
+  AbstractHealthCardEvent -up-|> AbstractCardReaderEvent
+  AbstractEgkHealthCardPresentEvent -up-|> AbstractHealthCardPresentEvent
+  AbstractHbaHealthCardPresentEvent -up-|> AbstractHealthCardPresentEvent
+  AbstractHealthCardPresentEvent -up-|> AbstractHealthCardEvent
+  AbstractSmcbHealthCardPresentEvent -up-|> AbstractHealthCardPresentEvent
+  Egk21HealthCardPresentEvent -up-|> AbstractEgkHealthCardPresentEvent
+  Egk2HealthCardPresentEvent -up-|> AbstractEgkHealthCardPresentEvent
+  Hba21HealthCardPresentEvent -up-|> AbstractHbaHealthCardPresentEvent
+  Hba2HealthCardPresentEvent -up-|> AbstractHbaHealthCardPresentEvent
+  Smcb21HealthCardPresentEvent -up-|> AbstractSmcbHealthCardPresentEvent
+  Smcb2HealthCardPresentEvent -up-|> AbstractSmcbHealthCardPresentEvent
+  UnknownCardPresentEvent -up-|> AbstractHealthCardPresentEvent
+
+@enduml

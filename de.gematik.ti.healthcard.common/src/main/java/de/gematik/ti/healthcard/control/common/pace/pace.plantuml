@@ -1,0 +1,95 @@
+@startuml
+
+ package de.gematik.ti.healthcard.control.common.pace {
+      class TrustedChannelPaceKeyRequestHandler {
+          {static} - LOG : Logger
+          {static} - TAG : String
+          {static} - instance : TrustedChannelPaceKeyRequestHandler
+          - TrustedChannelPaceKeyRequestHandler()
+          {static} + getInstance()
+          {static} + startHandling()
+          {static} + stopHandling()
+          - register()
+          - unregister()
+          + handleRequestPaceKeyEvent()
+      }
+
+
+          class CardAccessNumberRequester {
+              {static} - LOG : Logger
+              - queue : ArrayBlockingQueue<CardAccessNumber>
+              + call()
+              + handleCan()
+          }
+
+          class PaceInfo {
+              {static} - LOG : Logger
+              {static} - PARAMETER256 : int
+              {static} - PARAMETER384 : int
+              {static} - PARAMETER512 : int
+              - cardAccess : byte[]
+              - paceInfoProtocolBytes : byte[]
+              - protocol : ASN1ObjectIdentifier
+              - parameterID : int
+              ~ PaceInfo()
+              - extractProtocol()
+              ~ getPaceInfoProtocolBytes()
+              ~ getParameterIDString()
+              ~ getProtocolID()
+          }
+
+
+
+
+          class TrustedChannelConstructor {
+              {static} - LOG : Logger
+              {static} - TAG : String
+              {static} - RECEIVE_BUFFER : int
+              {static} + TIMEOUT : int
+              + TrustedChannelConstructor()
+              + run()
+          }
+
+
+
+
+
+
+          class TrustedChannelPaceKeyExchange {
+              {static} - LOG : Logger
+              {static} - SECRET_KEY_REFERENCE : int
+              - card : IHealthCard
+              - can : String
+              - paceInfo : PaceInfo[]
+              + TrustedChannelPaceKeyExchange()
+              + negotiatePaceKey()
+              - selectEfMf()
+              - selectEfCardAccess()
+              - extractPaceInfo()
+              - manageSecurityEnvironment()
+              - createEncryptedNonceZ()
+              - generateEphemeralPublicKeyFirstECDH()
+              - mapNonce()
+              - performKeyAgreement()
+              - mutualAuthentication()
+              - compareCalculatedAndReceivedMacPiccs()
+          }
+        }
+
+        package java.lang {
+                    class Thread {
+                        + run()
+                    }
+              }
+
+      CardAccessNumberRequester -up-|> Callable
+      CardAccessNumberRequester -up-|> ICardAccessNumberResponseListener
+      TrustedChannelPaceKeyRequestHandler o-- RequestPaceKeyEvent
+      TrustedChannelConstructor o-- RequestPaceKeyEvent
+      TrustedChannelPaceKeyExchange o-- MacPcd : macPcd
+      TrustedChannelPaceKeyRequestHandler ..> TrustedChannelConstructor : start Thread
+      TrustedChannelConstructor ..> CardAccessNumberRequester
+      CardAccessNumberRequester o-- RequestCardAccessNumberEvent
+      TrustedChannelPaceKeyExchange o-- PaceInfo
+
+@enduml

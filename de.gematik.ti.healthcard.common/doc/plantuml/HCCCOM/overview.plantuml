@@ -1,0 +1,103 @@
+@startuml
+
+
+  namespace de.gematik.ti.healthcard.control.common {
+
+  enum CARD_TYPE {
+          EGK
+          HBA
+          SMCB
+          UNKNOWN
+  }
+
+  class CardGenerationExtractor {
+            {static} + RADIX_16 : int
+            {static} + MIN_VERSION_LENGTH : int
+            + getCardGeneration()
+            + getCardGeneration()
+            - convertToInt()
+            - check()
+  }
+
+    class CardDetector {
+     {static} - LOG : Logger
+              {static} - TAG : String
+              {static} - RECEIVE_BUFFER_SIZE : int
+              {static} - instance : CardDetector
+              - healthCardMap : Map<ICardReader, IHealthCard>
+              - CardDetector()
+              {static} + getInstance()
+              {static} + startDetection()
+              {static} + stopDetection()
+              - register()
+              - unregister()
+              + handleCardPresentEvents()
+              - createHealthCardWithTypeAndSendEvent()
+              - extractCardType()
+              - sendEvent()
+              - createPresentEventForHealthCardType()
+              - getHealthCardTypeSmcb()
+              - getHealthCardTypeHba()
+              - getHealthCardTypeForEgk()
+              + handleCardAbsentEvents()
+              - sendCardAbsentEvent()
+              + handleCardReaderDisconnectedEvents()
+              - createAbsentEventForHealthCardType()
+    }
+
+    class TrustedChannelPaceKeyRequestHandler {
+    {static} - LOG : Logger
+              {static} - TAG : String
+              {static} - instance : TrustedChannelPaceKeyRequestHandler
+              - TrustedChannelPaceKeyRequestHandler()
+              {static} + getInstance()
+              {static} + startHandling()
+              {static} + stopHandling()
+              - register()
+              - unregister()
+              + handleRequestPaceKeyEvent()
+    }
+
+    class CallbackHandlePin {
+          {static} - LOG : Logger
+          - card : IHealthCard
+          - pinResultResultOperation : ResultOperation<PinResult>
+          - queue : ArrayBlockingQueue<ResultOperation<PinResult>>
+          + CallbackHandlePin()
+          + abortRequest()
+          + call()
+          + handlePinNumber()
+      }
+
+    class PinVerifier {
+    {static} - LOG : Logger
+              - cardHc : IHealthCard
+              + PinVerifier()
+              {static} + stringToIntarray()
+              + verifyPin()
+              - flapMapSelections()
+              - getSelectRootResult()
+              - hookAbsentEvent()
+              - validatePinResult()
+              - verifyPin()
+    }
+
+
+    namespace event {
+    class AbstractHealthCardEvent {
+    }
+          package absent {
+          }
+          package present {
+          }
+    }
+
+  }
+
+  de.gematik.ti.healthcard.control.common.CardDetector +-down- de.gematik.ti.healthcard.control.common.CARD_TYPE
+  de.gematik.ti.healthcard.control.common.CardDetector ..> de.gematik.ti.healthcard.control.common.CardGenerationExtractor
+  de.gematik.ti.healthcard.control.common.CardDetector ..> de.gematik.ti.healthcard.control.common.event
+  de.gematik.ti.healthcard.control.common.CallbackHandlePin .up.|> de.gematik.ti.healthcard.control.common.PinVerifier
+
+
+@enduml
